@@ -13,7 +13,7 @@
 
     for (let file of data) {
       if (!file.name.startsWith('index')) {
-        htmlString += `<li><a href="${file.name}">${file.name}</a></li>\n`;
+        htmlString += `<li><a href="files/${file.name}">${file.name}</a></li>\n`;
       }
     }
 	
