@@ -11,7 +11,7 @@ def generar_html_lista_archivos():
     contenido_html = "<html>\n<head>\n<h1>Kodi</h1>\n</head>\n"
 
     for archivo in archivos:
-        contenido_html += f"<li><a href='{archivo}'>{archivo}</a></li>\n"
+        contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
 
     contenido_html += "</body>\n</html>"
 
