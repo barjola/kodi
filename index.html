@@ -1,18 +1,26 @@
 <html>
- <head>
- <h1>Kodi</h1>
- </head>
  <body>
-<li><a href="plugin.video.cristalazul-3.0.8.zip">plugin.video.cristalazul-3.0.8.zip</a></li>
-<li><a href="script.luar-0.9.10.zip">script.luar-0.9.10.zip</a></li>
-<li><a href="repository.Luar.zip">repository.Luar.zip</a></li>
-<li><a href="plugin.video.moestv-0.2.1.zip">plugin.video.moestv-0.2.1.zip</a></li>
-<li><a href="plugin.video.movistarplus-0.8.8.zip">plugin.video.movistarplus-0.8.8.zip</a></li>
-<li><a href="repository.alfa-addon-1.0.8.zip">repository.alfa-addon-1.0.8.zip</a></li>
-<li><a href="repository.bugatsinho-2.7.zip">repository.bugatsinho-2.7.zip</a></li>
-<li><a href="repository.elementumorg-0.0.1.zip">repository.elementumorg-0.0.1.zip</a></li>
-<li><a href="repository.KODIvertiDO_TEAM-2.0.zip">repository.KODIvertiDO_TEAM-2.0.zip</a></li>
-<li><a href="script.limpiarkodi-3.0.1.zip">script.limpiarkodi-3.0.1.zip</a></li>
-<li><a href="script.module.ttml2ssa-0.3.8.zip">script.module.ttml2ssa-0.3.8.zip</a></li>
-<li><a href="AceStream_MOD_ver3-3.1.48.0-armv7.apk">AceStream_MOD_ver3-3.1.48.0-armv7.apk</a></li>
-</body></html>
+</body>
+<script>
+(() => {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/barjola/kodi/contents/', false);
+  xhr.send();
+
+  if (xhr.status === 200) {
+    const data = JSON.parse(xhr.responseText);
+    let htmlString = ' <head><h1>Kodi</h1></head>';
+
+    for (let file of data) {
+      if (!file.name.startsWith('index')) {
+        htmlString += `<li><a href="${file.name}">${file.name}</a></li>`;
+      }
+    }
+
+    document.getElementsByTagName('body')[0].innerHTML = htmlString;
+  } else {
+    console.error(`Failed to fetch data. Status code: ${xhr.status}`);
+  }
+})();
+</script>
+</html>
