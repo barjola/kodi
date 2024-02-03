@@ -1,0 +1,25 @@
+<html>
+ <body>
+</body>
+<script>
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/barjola/kodi/contents/', false);
+  xhr.send();
+
+  if (xhr.status === 200) {
+    const data = JSON.parse(xhr.responseText);
+    let htmlString = ' <head>\n<h1>Kodi</h1>\n</head>\n';
+
+    for (let file of data) {
+      if (!file.name.startsWith('index')) {
+        htmlString += `<li><a href="${file.name}">${file.name}</a></li>\n`;
+      }
+    }
+	
+    document.getElementsByTagName('body')[0].innerHTML = htmlString;
+  } else {
+    console.error(`Failed to fetch data. Status code: ${xhr.status}`);
+  }
+</script>
+</html>
