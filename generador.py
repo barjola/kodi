@@ -23,3 +23,20 @@ def generar_html_lista_archivos():
 
 if __name__ == "__main__":
     generar_html_lista_archivos()
+
+
+
+
+# PRE COMMIT SH
+# 
+# #!/bin/sh
+# 
+# 
+# # Run your Python script
+# python generador.py
+# 
+# # Add all new files to the commit
+# git add --all
+# 
+# # Continue with the default pre-commit actions
+# exit 0
