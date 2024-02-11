@@ -5,7 +5,7 @@ def generar_html_lista_archivos():
     directorio_actual = os.path.dirname(os.path.realpath(__file__))
 
     # Obtener la lista de archivos en el mismo directorio excluyendo los que empiezan por "index"
-    archivos = [archivo for archivo in os.listdir(directorio_actual) if os.path.isfile(os.path.join(directorio_actual, archivo)) and not archivo.startswith("index") and not archivo.endswith(".py")]
+    archivos = [archivo for archivo in os.listdir(directorio_actual) if os.path.isfile(os.path.join(directorio_actual, archivo)) and not archivo.startswith("index") and not archivo.startswith(".DS_Store") and not archivo.endswith(".py")]
 
     # Crear el contenido HTML
     contenido_html = "<html>\n<head>\n<h1>Kodi</h1>\n</head>\n"
