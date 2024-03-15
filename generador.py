@@ -44,7 +44,7 @@ def generar_html_lista_archivos():
 
     for archivo in archivos:
         prefix = getPrefix(archivo)
-        contenido_html += f'<li><a href="{archivo}">{prefix}{archivo}</a></li>\n'
+        contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
 
     contenido_html += "</body>\n</html>"
 
