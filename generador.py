@@ -1,26 +1,30 @@
 import os
 
-def generar_html_lista_archivos():
-    # Obtener el directorio actual
-    directorio_actual = os.path.dirname(os.path.realpath(__file__))
-
-    # Obtener la lista de archivos en el mismo directorio excluyendo los que empiezan por "index"
-    archivos = [archivo for archivo in os.listdir(directorio_actual) if not archivo.startswith("index") and not archivo.startswith(".DS_Store") and not archivo.endswith(".py") and not archivo.startswith(".")]
-
-    print(archivos)
-    # Crear el contenido HTML
+def generar_html(directorio):
+    archivos = [archivo for archivo in os.listdir(directorio) if not archivo.startswith("index") and not archivo.startswith(".DS_Store") and not archivo.endswith(".py") and not archivo.startswith(".")]
+    archivos =  sorted(archivos)
+    
     contenido_html = "<html>\n<head>\n<h1>Kodi</h1>\n</head>\n"
 
     for archivo in archivos:
-        contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
+        if os.path.isfile(os.path.join(directorio, archivo)):
+            contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
+        else:
+            generar_html(os.path.join(directorio, archivo))
+            contenido_html += f'<li><a href="{archivo}/">{archivo}/</a></li>\n'
 
     contenido_html += "</body>\n</html>"
 
     # Guardar el contenido en un archivo HTML
-    with open("index.html", "w") as archivo_html:
+    with open(directorio + "/index.html", "w") as archivo_html:
         archivo_html.write(contenido_html)
 
-    print("Se ha generado el archivo HTML: index.html")
+    print("Se ha generado el archivo HTML: " + directorio + "/index.html")
+
+def generar_html_lista_archivos():
+    directorio_actual = os.path.dirname(os.path.realpath(__file__))
+
+    generar_html(directorio_actual)
 
 if __name__ == "__main__":
     generar_html_lista_archivos()
