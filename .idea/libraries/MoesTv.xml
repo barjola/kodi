@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="MoesTv">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/MoesTv/MoesTV_plugin.video.duffyou-0.2.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/MoesTv/MoesTV_plugin.video.moestv-0.2.1.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

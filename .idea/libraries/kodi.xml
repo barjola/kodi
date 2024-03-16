@@ -1,0 +1,30 @@
+<component name="libraryTable">
+  <library name="kodi">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Chopo_Series_plugin.video.choposeries-19.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Chopo_KodiTV_plugin.video.koditv-9.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_Elementum_repository.elementumorg-0.0.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Chopo_Cine_plugin.video.chopocine-15.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_KoDivertido_repository.KODIvertiDO_TEAM-2.0.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Script_resolveurl_script.module.resolveurl-5.1.116.zip!/" />
+      <root url="jar://$PROJECT_DIR$/LUAR_script.luar-0.9.10.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_Luar_repository.Luar.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_GTKing_repository.GTKing-Matrix-1.9.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Script_limpiar_kodi_script.limpiarkodi-3.0.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_Alfa_repository.alfa-addon-1.0.8.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Script_elementum_plugin.video.elementum-0.1.98.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Chopo_MiTele_plugin.video.mitelechopo-9.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_bugatsinho_sports_repository.bugatsinho-2.7.zip!/" />
+      <root url="jar://$PROJECT_DIR$/MovistarPlus_plugin.video.movistarplus-0.8.16.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_Chopo_repository.tvchopo-3.zip!/" />
+      <root url="jar://$PROJECT_DIR$/CristalAzul_plugin.video.cristalazul-3.0.8.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Script_Tttml2ssa_script.module.ttml2ssa-0.3.8.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Repo_Resolveurl_repository.resolveurl-1.0.0.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Chopo_AtresPlayer_plugin.video.atresplayerchopo-10.zip!/" />
+      <root url="jar://$PROJECT_DIR$/HORUS_script.module.horus-1.1.9.zip!/" />
+      <root url="jar://$PROJECT_DIR$/Chopo_TV_plugin.video.tvchopo-29.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
