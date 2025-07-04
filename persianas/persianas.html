@@ -34,7 +34,6 @@
   </style>
 </head>
 <body>
-  <h1>Control de Persianas</h1>
   <div class="container" id="blindsContainer"></div>
 
   <script>
@@ -88,7 +87,7 @@
 
         btnOpen.addEventListener('click', () => {
           sendCommand(ip, 'roller/0?go=open&duration=0');
-          setTimeout(() => updatePosition(ip, slider, label), 1000);
+          setTimeout(() => updatePosition(ip, slider, label), 10000);
         });
 
         btnStop.addEventListener('click', () => {
@@ -98,7 +97,7 @@
 
         btnClose.addEventListener('click', () => {
           sendCommand(ip, 'roller/0?go=close&duration=0');
-          setTimeout(() => updatePosition(ip, slider, label), 1000);
+          setTimeout(() => updatePosition(ip, slider, label), 10000);
         });
 
         slider.addEventListener('input', () => {
@@ -107,7 +106,7 @@
 
         slider.addEventListener('change', () => {
           sendCommand(ip, `relay/0?turn=${slider.value}`);
-          setTimeout(() => updatePosition(ip, slider, label), 1000);
+          setTimeout(() => updatePosition(ip, slider, label), 10000);
         });
 
         container.appendChild(card);
