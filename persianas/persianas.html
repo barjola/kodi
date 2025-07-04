@@ -25,6 +25,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      text-align: center;
     }
     .blind-card h2 {
       margin-top: 0;
@@ -86,14 +87,10 @@
       font-weight: bold;
     }
     #relayControl {
-      background: #fff;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       display: flex;
+      justify-content: center;
       align-items: center;
       gap: 12px;
-      justify-content: center;
     }
     #relayControl button {
       padding: 10px 20px;
@@ -101,16 +98,24 @@
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background-color: #007bff;
       color: white;
       transition: background-color 0.3s ease;
-    }
-    #relayControl button:hover {
-      background-color: #0056b3;
     }
     #relayStatus {
       font-weight: bold;
       font-size: 1rem;
+    }
+    .btn-relay-on {
+      background-color: #f44336; /* rojo apagar */
+    }
+    .btn-relay-on:hover {
+      background-color: #d32f2f;
+    }
+    .btn-relay-off {
+      background-color: #4caf50; /* verde encender */
+    }
+    .btn-relay-off:hover {
+      background-color: #388e3c;
     }
     @media (max-width: 600px) {
       body {
@@ -147,10 +152,14 @@
   </style>
 </head>
 <body>
-  <div id="relayControl">
-    <button id="btnRelayToggle">Cargando estado...</button>
-    <div id="relayStatus">---</div>
+  <div class="blind-card" style="max-width:280px; margin: 0 auto 20px auto; text-align:center;">
+  <h2>Ordenador</h2>
+  <div id="relayControl" style="display:flex; justify-content:center; align-items:center; gap:12px;">
+    <button id="btnRelayToggle" style="padding:10px 20px; font-size:1rem; cursor:pointer; border:none; border-radius:5px; color:white; transition: background-color 0.3s ease;">Cargando estado...</button>
+    <div id="relayStatus" style="font-weight:bold; font-size:1rem;">---</div>
   </div>
+</div>
+
 
   <div class="container" id="blindsContainer"></div>
 
@@ -170,22 +179,31 @@
     const btnRelayToggle = document.getElementById('btnRelayToggle');
     const relayStatus = document.getElementById('relayStatus');
 
+    function updateRelayButton(isOn) {
+      if(isOn) {
+        btnRelayToggle.textContent = 'Apagar';
+        btnRelayToggle.classList.remove('btn-relay-off');
+        btnRelayToggle.classList.add('btn-relay-on');
+        relayStatus.textContent = 'Estado: ON';
+      } else {
+        btnRelayToggle.textContent = 'Encender';
+        btnRelayToggle.classList.remove('btn-relay-on');
+        btnRelayToggle.classList.add('btn-relay-off');
+        relayStatus.textContent = 'Estado: OFF';
+      }
+    }
+
     function fetchRelayStatus() {
       fetch(`http://${relayIp}/status`)
         .then(res => res.json())
         .then(data => {
           const isOn = data.relays?.[0]?.ison;
-          if (isOn) {
-            relayStatus.textContent = 'Estado: ON';
-            btnRelayToggle.textContent = 'Apagar';
-          } else {
-            relayStatus.textContent = 'Estado: OFF';
-            btnRelayToggle.textContent = 'Encender';
-          }
+          updateRelayButton(isOn);
         })
         .catch(() => {
           relayStatus.textContent = 'No se pudo obtener estado';
           btnRelayToggle.textContent = 'Error';
+          btnRelayToggle.classList.remove('btn-relay-on', 'btn-relay-off');
         });
     }
 
@@ -201,7 +219,6 @@
     });
 
     fetchRelayStatus();
-
 
     function updatePosition(ip, slider, label) {
       fetch(`http://${ip}/status`)
@@ -248,7 +265,7 @@
 
         btnStop.addEventListener('click', () => {
           sendCommand(ip, 'roller/0?go=stop&duration=0');
-          setTimeout(() => updatePosition(ip, slider, label), 1000);
+          setTimeout(() => updatePosition(ip, slider, label), 10);
         });
 
         btnClose.addEventListener('click', () => {
