@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Persianas</title>
+  <!--
+    Importante: Para evitar errores CORS, sirve este archivo desde un servidor HTTP local.
+    Por ejemplo, en la carpeta donde guardes este HTML ejecuta:
+      python3 -m http.server  
+    Luego abre en el navegador:
+      http://localhost:8000/control_persianas.html
+  -->
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .blind-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+    .blind-card h2 { margin-top: 0; font-size: 1.2rem; color: #333; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
+    .controls button { flex: 1; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: background 0.3s ease; }
+    .btn-open { background: #4caf50; color: #fff; order: 1; }
+    .btn-open:hover { background: #45a045; }
+    .btn-stop { background: #ff9800; color: #fff; order: 2; }
+    .btn-stop:hover { background: #fb8c00; }
+    .btn-close { background: #f44336; color: #fff; order: 3; }
+    .btn-close:hover { background: #e53935; }
+    .slider-container { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+    .slider-container input[type=range] { flex: 1; }
+    .slider-container span { width: 36px; text-align: center; font-weight: bold; }
+
+    #authForm { text-align: center; margin-top: 50px; }
+    #authForm input[type=email] { padding: 10px; font-size: 1rem; width: 250px; }
+    #authForm button { margin-left: 10px; padding: 10px 20px; font-size: 1rem; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+
+    /* Responsive para móvil */
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .container { grid-template-columns: 1fr; gap: 12px; }
+      .blind-card { padding: 12px; }
+      .controls { flex-direction: column; gap: 6px; }
+      .controls button { width: 100%; }
+      .slider-container { flex-direction: column; align-items: stretch; }
+      .slider-container span { margin: 8px 0 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Control de Persianas</h1>
+  <div id="authContainer"></div>
+  <div class="container" id="blindsContainer" style="display:none"></div>
+
+  <script>
+    const blinds = [
+      { name: 'Escritorio', ip: '192.168.0.27' },
+      { name: 'Salón 1',    ip: '192.168.0.23' },
+      { name: 'Salón 2',    ip: '192.168.0.25' },
+      { name: 'Dormitorio',  ip: '192.168.0.24' },
+      { name: 'Habitación',  ip: '192.168.0.30' }
+    ];
+
+    const container = document.getElementById('blindsContainer');
+    const authContainer = document.getElementById('authContainer');
+
+    function showAuthForm() {
+      authContainer.innerHTML = `
+        <form id="authForm">
+          <label>Introduce tu correo: </label>
+          <input type="email" id="email" required>
+          <button type="submit">Entrar</button>
+        </form>
+      `;
+
+      document.getElementById('authForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        if (email === 'danibarjola@gmail.com') {
+          document.cookie = `auth=${email}; path=/`;
+          initApp();
+        } else {
+          alert('401 - No autorizado');
+        }
+      });
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function initApp() {
+      authContainer.style.display = 'none';
+      container.style.display = 'grid';
+
+      blinds.forEach(({ name, ip }) => {
+        const card = document.createElement('div');
+        card.className = 'blind-card';
+        card.innerHTML = `
+          <h2>${name}</h2>
+          <div class="controls">
+            <button class="btn-open">Abrir</button>
+            <button class="btn-stop">Detener</button>
+            <button class="btn-close">Cerrar</button>
+          </div>
+          <div class="slider-container">
+            <input type="range" min="0" max="100" value="0" disabled>
+            <span>--%</span>
+          </div>
+        `;
+
+        const [btnOpen, btnStop, btnClose] = card.querySelectorAll('.controls button');
+        const slider = card.querySelector('input[type=range]');
+        const label = card.querySelector('.slider-container span');
+
+        fetch(`http://${ip}/status`)
+          .then(res => res.json())
+          .then(data => {
+            const pos = data.rollers?.[0]?.current_pos;
+            if (typeof pos === 'number') {
+              slider.value = pos;
+              label.textContent = pos + '%';
+            }
+          })
+          .catch(err => console.error(`Error al obtener estado de ${name}:`, err))
+          .finally(() => slider.disabled = false);
+
+        btnOpen.addEventListener('click', () => sendCommand(ip, 'roller/0?go=open&duration=0'));
+        btnStop.addEventListener('click', () => sendCommand(ip, 'roller/0?go=stop&duration=0'));
+        btnClose.addEventListener('click', () => sendCommand(ip, 'roller/0?go=close&duration=0'));
+
+        slider.addEventListener('input', () => {
+          const value = slider.value;
+          label.textContent = value + '%';
+          sendCommand(ip, `relay/0?turn=${value}`);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    function sendCommand(ip, path) {
+      fetch(`http://${ip}/${path}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Error en la petición');
+        })
+        .catch(err => console.error('Error al controlar persiana', err));
+    }
+
+    const auth = getCookie('auth');
+    if (auth === 'danibarjola@gmail.com') {
+      initApp();
+    } else {
+      showAuthForm();
+    }
+  </script>
+</body>
+</html>
