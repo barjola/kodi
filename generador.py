@@ -8,7 +8,10 @@ def generar_html(directorio):
 
     for archivo in archivos:
         if os.path.isfile(os.path.join(directorio, archivo)):
-            contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
+            if archivo == "persianas.html":
+                contenido_html += f'<li><a href="{archivo}" download>{archivo}</a></li>\n'
+            else:
+                contenido_html += f'<li><a href="{archivo}">{archivo}</a></li>\n'
         else:
             generar_html(os.path.join(directorio, archivo))
             contenido_html += f'<li><a href="{archivo}/">{archivo}/</a></li>\n'
