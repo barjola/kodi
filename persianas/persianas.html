@@ -4,13 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Persianas</title>
-  <!--
-    Importante: Para evitar errores CORS, sirve este archivo desde un servidor HTTP local.
-    Por ejemplo, en la carpeta donde guardes este HTML ejecuta:
-      python3 -m http.server  
-    Luego abre en el navegador:
-      http://localhost:8000/control_persianas.html
-  -->
   <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
     h1 { text-align: center; margin-bottom: 20px; }
@@ -29,11 +22,6 @@
     .slider-container input[type=range] { flex: 1; }
     .slider-container span { width: 36px; text-align: center; font-weight: bold; }
 
-    #authForm { text-align: center; margin-top: 50px; }
-    #authForm input[type=email] { padding: 10px; font-size: 1rem; width: 250px; }
-    #authForm button { margin-left: 10px; padding: 10px 20px; font-size: 1rem; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-
-    /* Responsive para móvil */
     @media (max-width: 600px) {
       body { padding: 10px; }
       .container { grid-template-columns: 1fr; gap: 12px; }
@@ -47,8 +35,7 @@
 </head>
 <body>
   <h1>Control de Persianas</h1>
-  <div id="authContainer"></div>
-  <div class="container" id="blindsContainer" style="display:none"></div>
+  <div class="container" id="blindsContainer"></div>
 
   <script>
     const blinds = [
@@ -60,36 +47,21 @@
     ];
 
     const container = document.getElementById('blindsContainer');
-    const authContainer = document.getElementById('authContainer');
 
-    function showAuthForm() {
-      authContainer.innerHTML = `
-        <form id="authForm">
-          <label>Introduce tu correo: </label>
-          <input type="email" id="email" required>
-          <button type="submit">Entrar</button>
-        </form>
-      `;
-
-      document.getElementById('authForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        if (email === 'danibarjola@gmail.com') {
-          document.cookie = `auth=${email}; path=/`;
-          initApp();
-        } else {
-          alert('401 - No autorizado');
-        }
-      });
-    }
-
-    function getCookie(name) {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      return match ? match[2] : null;
+    function updatePosition(ip, slider, label) {
+      fetch(`http://${ip}/status`)
+        .then(res => res.json())
+        .then(data => {
+          const pos = data.rollers?.[0]?.current_pos;
+          if (typeof pos === 'number') {
+            slider.value = pos;
+            label.textContent = pos + '%';
+          }
+        })
+        .catch(err => console.error(`Error al actualizar estado de ${ip}:`, err));
     }
 
     function initApp() {
-      authContainer.style.display = 'none';
       container.style.display = 'grid';
 
       blinds.forEach(({ name, ip }) => {
@@ -112,26 +84,30 @@
         const slider = card.querySelector('input[type=range]');
         const label = card.querySelector('.slider-container span');
 
-        fetch(`http://${ip}/status`)
-          .then(res => res.json())
-          .then(data => {
-            const pos = data.rollers?.[0]?.current_pos;
-            if (typeof pos === 'number') {
-              slider.value = pos;
-              label.textContent = pos + '%';
-            }
-          })
-          .catch(err => console.error(`Error al obtener estado de ${name}:`, err))
-          .finally(() => slider.disabled = false);
+        updatePosition(ip, slider, label);
 
-        btnOpen.addEventListener('click', () => sendCommand(ip, 'roller/0?go=open&duration=0'));
-        btnStop.addEventListener('click', () => sendCommand(ip, 'roller/0?go=stop&duration=0'));
-        btnClose.addEventListener('click', () => sendCommand(ip, 'roller/0?go=close&duration=0'));
+        btnOpen.addEventListener('click', () => {
+          sendCommand(ip, 'roller/0?go=open&duration=0');
+          setTimeout(() => updatePosition(ip, slider, label), 1000);
+        });
+
+        btnStop.addEventListener('click', () => {
+          sendCommand(ip, 'roller/0?go=stop&duration=0');
+          setTimeout(() => updatePosition(ip, slider, label), 1000);
+        });
+
+        btnClose.addEventListener('click', () => {
+          sendCommand(ip, 'roller/0?go=close&duration=0');
+          setTimeout(() => updatePosition(ip, slider, label), 1000);
+        });
 
         slider.addEventListener('input', () => {
-          const value = slider.value;
-          label.textContent = value + '%';
-          sendCommand(ip, `relay/0?turn=${value}`);
+          label.textContent = slider.value + '%';
+        });
+
+        slider.addEventListener('change', () => {
+          sendCommand(ip, `relay/0?turn=${slider.value}`);
+          setTimeout(() => updatePosition(ip, slider, label), 1000);
         });
 
         container.appendChild(card);
@@ -146,12 +122,7 @@
         .catch(err => console.error('Error al controlar persiana', err));
     }
 
-    const auth = getCookie('auth');
-    if (auth === 'danibarjola@gmail.com') {
-      initApp();
-    } else {
-      showAuthForm();
-    }
+    initApp();
   </script>
 </body>
 </html>
