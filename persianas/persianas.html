@@ -304,12 +304,11 @@
         .catch(err => console.error('Error al controlar persiana', err));
     }
 
-    // initApp();
-    // document.querySelector("#principal").style.display = "";
+    if (!document.querySelector("#descargarBtn")) { 
+      initApp();
+    }
 
     function descargarPagina() {
-      initApp();
-
       document.querySelector("#descargarBtn").remove();
 
       document.querySelector("#principal").style.display = "";
