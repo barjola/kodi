@@ -252,7 +252,7 @@
             <button class="btn-close">🡻</button>
           </div>
           <div class="slider-container">
-            <input type="range" min="0" max="100" value="0" disabled>
+            <input type="range" min="0" max="100" value="0">
             <span>--%</span>
           </div>
         `;
@@ -286,9 +286,9 @@
         slider.addEventListener('change', () => {
           if (sliderTimeout) clearTimeout(sliderTimeout);
           sliderTimeout = setTimeout(() => {
-            sendCommand(ip, `relay/0?turn=${slider.value}`);
+            sendCommand(ip, `roller/0?go=to_pos&roller_pos=${slider.value}`);
             updatePosition(ip, slider, label);
-          }, 10000);
+          }, 1000);
         });
 
         container.appendChild(card);
