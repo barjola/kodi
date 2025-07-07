@@ -39,12 +39,12 @@
     .controls {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       margin-bottom: 12px;
       justify-content: center;
     }
     .controls button {
-      flex: 1;
+      width: 40px;
       padding: 8px;
       border: none;
       border-radius: 4px;
@@ -157,16 +157,18 @@
   </style>
 </head>
 <body>
-  <div class="blind-card" style="max-width:280px; margin: 0 auto 20px auto; text-align:center;">
-  <h2>Ordenador</h2>
-  <div id="relayControl" style="display:flex; justify-content:center; align-items:center; gap:12px;">
-    <button id="btnRelayToggle" style="padding:10px 20px; font-size:1rem; cursor:pointer; border:none; border-radius:5px; color:white; transition: background-color 0.3s ease;">Cargando estado...</button>
-    <div id="relayStatus" style="font-weight:bold; font-size:1rem; color: #03AAF5;">---</div>
+  <button id="descargarBtn" onclick="descargarPagina()">Descargar Pagina</button>
+
+  <div id="principal" style="display:none">
+    <div class="blind-card" style="max-width:280px; margin: 0 auto 20px auto; text-align:center;">
+      <h2>Ordenador</h2>
+      <div id="relayControl" style="display:flex; justify-content:center; align-items:center; gap:12px;">
+        <button id="btnRelayToggle" style="padding:10px 20px; font-size:1rem; cursor:pointer; border:none; border-radius:5px; color:white; transition: background-color 0.3s ease;">Cargando estado...</button>
+        <div id="relayStatus" style="font-weight:bold; font-size:1rem; color: #03AAF5;">---</div>
+      </div>
+    </div>
+    <div class="container" id="blindsContainer"></div>
   </div>
-</div>
-
-
-  <div class="container" id="blindsContainer"></div>
 
   <script>
     const blinds = [
@@ -248,7 +250,7 @@
           <h2>${name}</h2>
           <div class="controls">
             <button class="btn-open">▲</button>
-            <button class="btn-stop">⏸</button>
+            <button class="btn-stop">| |</button>
             <button class="btn-close">▼</button>
           </div>
           <div class="slider-container">
@@ -303,7 +305,23 @@
         .catch(err => console.error('Error al controlar persiana', err));
     }
 
-    initApp();
+    function descargarPagina() {
+      initApp();
+
+      document.querySelector("#descargarBtn").remove();
+
+      document.querySelector("#principal").style.display = "";
+
+      const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "persianas.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
