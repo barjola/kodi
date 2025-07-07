@@ -323,6 +323,17 @@
       a.download = "persianas.html";
       a.click();
       URL.revokeObjectURL(url);
+
+      document.querySelector("#principal").style.display = "none";
+
+      const texto = document.createElement("span");
+      texto.textContent = "Descargada!";
+      texto.style.color = "white";
+      texto.style.fontWeight = "bold";
+      texto.style.display = "block";
+      texto.style.marginBottom = "10px";
+
+      document.body.insertBefore(texto, document.body.firstChild);
     }
   </script>
 </body>
