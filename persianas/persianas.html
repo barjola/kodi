@@ -7,7 +7,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: #111111;
+      color: #f0f0f0;
       margin: 0;
       padding: 20px;
     }
@@ -18,9 +19,9 @@
       margin-top: 20px;
     }
     .blind-card {
-      background: #fff;
+      background: #101E24;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -31,6 +32,9 @@
       margin-top: 0;
       font-size: 1.2rem;
       color: #333;
+    }
+    .blind-card h2, .slider-container span {
+      color: #03AAF5;
     }
     .controls {
       display: flex;
@@ -47,6 +51,7 @@
       cursor: pointer;
       font-size: 0.9rem;
       transition: background 0.3s ease;
+      color: #ffffff;
     }
     .btn-open {
       background: #4caf50;
@@ -156,7 +161,7 @@
   <h2>Ordenador</h2>
   <div id="relayControl" style="display:flex; justify-content:center; align-items:center; gap:12px;">
     <button id="btnRelayToggle" style="padding:10px 20px; font-size:1rem; cursor:pointer; border:none; border-radius:5px; color:white; transition: background-color 0.3s ease;">Cargando estado...</button>
-    <div id="relayStatus" style="font-weight:bold; font-size:1rem;">---</div>
+    <div id="relayStatus" style="font-weight:bold; font-size:1rem; color: #03AAF5;">---</div>
   </div>
 </div>
 
